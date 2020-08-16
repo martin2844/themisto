@@ -67,7 +67,10 @@ const searchMeli = async (query, limit) => {
     let results = await getArticles(query, pages);
     //We get an array of arrays of objects. Lodash will help us flatten the array.
     let spreadResults = _.flattenDeep(results);
-    
+    if(spreadResults.length === 0){
+        let error = {error: `error, results: there were no results for  "${query}"`};
+        return error;
+    }
 return spreadResults;
 
 }

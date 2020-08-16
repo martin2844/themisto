@@ -25,6 +25,11 @@ const runBrowser = async (query) => {
   })
 
   console.log(count, " results")
+  
+  if(isNaN(count)){
+    let error = {error: `error, results: there were no results for  "${query}"`};
+    return error
+  }
 
   //Is element visible checks if the see-more button exists
   const isElementVisible = async (page, cssSelector) => {
@@ -67,7 +72,6 @@ const runBrowser = async (query) => {
   } 
   return articles;
   });
-
 
 
   await page.screenshot({path: 'example2.png'});

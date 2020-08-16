@@ -13,11 +13,10 @@ const ChooseProvider = async (provider, query, limit) => {
         results = await searchMeli(query, limit);
           break;
       default:
-          "error"
+          console.log(`error, provider: "${provider}" does not exist`);
+          results = {error: `error, provider: "${provider}" does not exist`};
           break;
   }
-
-  
   return results;
 }
 
