@@ -11,3 +11,4 @@ Will add two methods: One is scraping, the other is regular API via MELI's API.
 ## Version history:
 
 0.1 - Initial scaffold, puppeteer for scraping. Initial object config.
+0.2 - Meli Search added. 

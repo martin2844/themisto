@@ -7,6 +7,7 @@ const axios = require('axios');
 
 //methods
 const chooseMethod = require('./methods/ChooseMethod');
+const { send } = require('process');
 
 //initialize express.
 const app = express();
@@ -24,23 +25,32 @@ app.use(express.urlencoded({extended: false}));
 app.post('/search', async (req, res) => {
   //Destructure Request Body
   let {query, provider, callbackUrl, options, _id} = req.body;
+  let limit = options.limit
+  console.log("@@@@@@@@@@@@@@@@@@@@LIMIT@@@@@@@@@@@@@@@@@@\n",limit);
   //Log the ID we'll work on.
   console.log(_id);
 
   try {
 
         //Try to get results depending on the methods
-        let results = await chooseMethod(provider, query);
-
+        let results = await chooseMethod(provider, query, limit);
         //Create new search object to send back to Ganymede
         let search = {
           ...req.body,
           results: results
         }
-
+   
         //Send results backs to Ganymede
-        axios.post(callbackUrl, search).then(x => console.log(x, "sent post")).catch(x => res.send("Ganymede API ERROR: ", x));
-        res.send("search successful, sent back to ganymede");
+        try {
+
+          let sendResults = await axios.post(callbackUrl, search);
+          res.send(sendResults);
+
+        } catch (error) {
+          res.send(error)
+        }
+        // axios.post(callbackUrl, search).then(x => console.log(x, "sent post")).catch(x => res.status(500).send("Ganymede API ERROR: ", x));
+        // res.send("search successful, sent back to ganymede");
 
   } catch (error) {
         //If error send error back to Ganymede.
@@ -49,8 +59,14 @@ app.post('/search', async (req, res) => {
           status: "failed",
           error: error,
         }
-        axios.post(callbackUrl, search).then(x => console.log(x, "sent post")).catch(x => res.send("Ganymede API ERROR: ",x));
-        res.send("search failed, sent error to ganymede");
+        try {
+          let sendError = await axios.post(callbackUrl, search);
+          res.send(sendError);
+        } catch (error) {
+        // Cambiar todo esto a try catch.
+        res.send(error);
+        }
+       
       }
 
 
