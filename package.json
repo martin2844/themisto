@@ -2,12 +2,13 @@
   "name": "themisto",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "start": "node app",
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
+  "keywords": [],
   "license": "ISC",
   "dependencies": {
     "axios": "^0.19.2",
