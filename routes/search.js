@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const axios = require("axios");
+const deburr = require('lodash.deburr');
 
 //methods
 const chooseMethod = require('../methods/ChooseMethod');
@@ -18,11 +19,21 @@ router.post('/', async (req, res) => {
     try {
   
           //Try to get results depending on the methods
-          let results = await chooseMethod(provider, query, limit);
+          let resultsArray = await chooseMethod(provider, query, limit);
+          let results = resultsArray[0];
+          let cats = resultsArray[1];
+          cats = cats.map((cat) => {
+            //Clean array of spaces and diacritics.
+            cat = cat.toLowerCase();
+            cat = cat.replace(/\s+/g, '-');
+            cat = deburr(cat);
+            return cat;
+          })
           //Create new search object to send back to Ganymede
           let search = {
             ...req.body,
-            results: results
+            results: results,
+            categories: cats
           }
           
           if(results.error) {
@@ -32,7 +43,7 @@ router.post('/', async (req, res) => {
      
           //Send results backs to Ganymede
           try {
-            console.log("@@@@ Sending back results to Ganymede @@@@ : \n", search)
+            console.log("@@@@ Sending back results to Ganymede @@@@ : \n")
             let sendResults = await axios.post(callbackUrl, search);
             res.send(sendResults);
           } catch (error) {

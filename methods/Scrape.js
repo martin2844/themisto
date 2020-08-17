@@ -24,7 +24,7 @@ const runBrowser = async (query) => {
     return parseFloat(cleanCount);
   })
 
-  console.log(count, " results")
+  console.log("Scraped ", count, " results")
   
   if(isNaN(count)){
     let error = {error: `error, results: there were no results for  "${query}"`};
@@ -53,12 +53,35 @@ const runBrowser = async (query) => {
       loadMoreVisible = await isElementVisible(page, cssSelector);
     }
 
+
+  //Scrape categories
+  let cats = await page.evaluate(() => {
+    let allcatsLong = Array.from(document.querySelectorAll("#fil-cat-content a"), (el) => el.getAttribute('title'));
+    allcatsLong = allcatsLong.filter((cats) => {
+      return cats !== null;
+    });
+    let allcatsText = Array.from(document.querySelectorAll("#fil-cat-content a"), (el) => el.innerText);
+    allcatsText = allcatsText.filter((cats) => {
+      return cats.includes(".") === false;
+    });
+    allcatsText = allcatsText.map((cat) => {
+      return cat.substring(0, cat.indexOf(" "))   ;
+    })
+    allcatsText = allcatsLong.concat(allcatsText);
+    return allcatsText;
+  }) 
+
+  // console.log(cats);
+
+
+
     
   let total = await page.evaluate(() => {
     let articles = [];
     let prices = document.getElementsByClassName('thumb-price-e');
     let titles = document.getElementsByClassName('thumb-name');
-    let images = document.querySelectorAll(".itemhover img")
+    let images = document.querySelectorAll(".itemhover img");
+    let links = document.querySelectorAll(".dojoDndItem a");
     if(prices.length == titles.length && prices.length == images.length) {
 
       for (i = 0; i < titles.length; i++) {
@@ -66,7 +89,9 @@ const runBrowser = async (query) => {
           {
               'title': titles[i].innerText,
               'price': prices[i].innerText,
-              'img': images[i].src.substring(0, images[i].src.indexOf("?"))
+              'img': images[i].src.substring(0, images[i].src.indexOf("?")),
+              'link': links[i].getAttribute("href"),
+              'sku': links[i].getAttribute("href").substring(links[i].getAttribute("href").lastIndexOf("-") + 1, links[i].getAttribute("href").length)
           })
       }
   } 
@@ -76,7 +101,7 @@ const runBrowser = async (query) => {
 
   await page.screenshot({path: 'example2.png'});
   await browser.close();
-  return total;
+  return [total, cats];
 }
 
 

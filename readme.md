@@ -19,4 +19,6 @@ Will add two methods: One is scraping, the other is regular API via MELI's API.
         - no results
         - wrong provider
         - ganymede failure
+0.4 - Clean diacritics and white spaces on cats.
+0.5 - Modification of product info.
 

@@ -4,20 +4,25 @@ const searchMeli = require('./Meli.Js');
 
 const ChooseProvider = async (provider, query, limit) => {
   let results;
-
-  switch (provider) {
+  let cats;
+  let providerLow = provider.toLowerCase();
+  switch (providerLow) {
       case "easy":
-        results = await scrape(query);
+          let easyResults = await scrape(query);
+          results = easyResults[0];
+          cats = easyResults[1];
           break;
       case "meli":
-        results = await searchMeli(query, limit);
+          let meliResults = await searchMeli(query, limit);
+          results = meliResults[0],
+          cats = meliResults[1]
           break;
       default:
           console.log(`error, provider: "${provider}" does not exist`);
           results = {error: `error, provider: "${provider}" does not exist`};
           break;
   }
-  return results;
+  return [results, cats];
 }
 
 

@@ -30,6 +30,23 @@ const searchMeli = async (query, limit) => {
         pages = limit;
     }
 
+    //Get Item Category
+    const getCat = async(query) => {
+        let search = await axios.get('https://api.mercadolibre.com/sites/MLA/search?q=' + query + '&offset=' + 1 * 50);
+        let cat = search.data.filters;
+        cat = search.data.filters.filter(cat => {
+            return cat.id === "category" 
+        })
+        cat = cat[0].values;
+        cat = cat[0].path_from_root;
+        let cats = cat.map((cat) => {
+            return cat.name;
+        })
+
+       return cats;
+    }
+    
+
     //Get the actual items from Meli.
     const getArticles = async (query, pages) => {
         let arrayToStore = [];
@@ -44,11 +61,12 @@ const searchMeli = async (query, limit) => {
                         const cleanUp = response.data.results.map((result) => {
                             let image = result.thumbnail.replace("I.jpg", "O.jpg");
                             return importante = {
-                                id: result.id,
+                                SKU: result.id,
                                 title: result.title,
                                 price: result.price,
                                 link: result.permalink,
                                 image: image,
+                                categoryMLA: result.category_id,
                                 state: result.address.state_name,
                                 city: result.address.city_name
                             }
@@ -71,7 +89,10 @@ const searchMeli = async (query, limit) => {
         let error = {error: `error, results: there were no results for  "${query}"`};
         return error;
     }
-return spreadResults;
+    let cats = await getCat(query);
+    console.log("Searched ", spreadResults.length, " results")
+
+return [spreadResults, cats];
 
 }
 
