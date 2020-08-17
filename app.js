@@ -2,14 +2,12 @@ const express = require('express');
 require('dotenv').config();
 const cors = require('cors');
 const path = require('path');
-const forceSsl = require('force-ssl-heroku');
 const axios = require('axios');
 const morgan = require('morgan');
 const fs = require('fs');
 
 //initialize express.
 const app = express();
-app.use(forceSsl);
 app.use(cors());
 
 //Logger
