@@ -2,7 +2,6 @@ const express = require('express');
 require('dotenv').config();
 const cors = require('cors');
 const path = require('path');
-const axios = require('axios');
 const morgan = require('morgan');
 const fs = require('fs');
 
@@ -28,6 +27,6 @@ app.get("/", (req, res) => {
 })
 
 //Port and listen
-const PORT = process.env.PORT || 6000;
+const PORT = process.env.PORT || 5001;
 app.listen(PORT, console.log(`server started on ${PORT}`));
 
