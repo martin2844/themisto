@@ -23,6 +23,10 @@ app.use(express.urlencoded({extended: false}));
 //Search route
 app.use('/api/search', require('./routes/search'));
 
+app.get("/", (req, res) => {
+    res.send("themisto");
+})
+
 //Port and listen
 const PORT = process.env.PORT || 6000;
 app.listen(PORT, console.log(`server started on ${PORT}`));
