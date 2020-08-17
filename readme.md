@@ -8,6 +8,12 @@ Will add two methods: One is scraping, the other is regular API via MELI's API.
 ·Express Server Rest API
 ·Puppeteer
 
+
+## Run locally
+
+`npm i && node app.js`
+
+
 ## Version history:
 
 0.1 - Initial scaffold, puppeteer for scraping. Initial object config.   
@@ -20,5 +26,8 @@ Will add two methods: One is scraping, the other is regular API via MELI's API.
         - wrong provider  
         - ganymede failure  
 0.4 - Clean diacritics and white spaces on cats.    
-0.5 - Modification of product info.  
+0.5 - Modification of product info.    
+
+
+
 
