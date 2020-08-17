@@ -1,6 +1,6 @@
 //methods
 const scrape = require('./Scrape');
-const searchMeli = require('./Meli.Js');
+const searchMeli = require('./Meli');
 
 const ChooseProvider = async (provider, query, limit) => {
   let results;
